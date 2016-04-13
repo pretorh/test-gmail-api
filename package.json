@@ -6,5 +6,9 @@
     "type": "git",
     "url": "git+https://github.com/pretorh/test-gmail-api.git"
   },
-  "homepage": "https://github.com/pretorh/test-gmail-api#readme"
+  "homepage": "https://github.com/pretorh/test-gmail-api#readme",
+  "dependencies": {
+    "google-auth-library": "^0.9.7",
+    "googleapis": "^4.0.0"
+  }
 }
