@@ -1,0 +1,10 @@
+{
+  "name": "test-gmail-api",
+  "version": "0.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pretorh/test-gmail-api.git"
+  },
+  "homepage": "https://github.com/pretorh/test-gmail-api#readme"
+}
