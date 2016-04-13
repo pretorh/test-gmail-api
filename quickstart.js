@@ -2,6 +2,7 @@ var fs = require('fs');
 var readline = require('readline');
 var google = require('googleapis');
 var googleAuth = require('google-auth-library');
+var util = require('util');
 
 var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 var TOKEN_DIR = '.credentials/';
@@ -18,6 +19,8 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
           listThreads(auth, process.argv[3]);
       } else if (process.argv[2] === 'list-labels') {
           listLabels(auth, process.argv[3]);
+      } else if (process.argv[2] === 'message') {
+          getMessage(auth, process.argv[3]);
       } else {
           console.error('invalid command');
       }
@@ -117,4 +120,20 @@ function listThreads(auth, labelId) {
 
     console.log(response);
   });
+}
+
+function getMessage(auth, messageId) {
+    var gmail = google.gmail('v1');
+    gmail.users.messages.get({
+        auth: auth,
+        'userId': 'me',
+        'id': messageId
+    }, function(e, data) {
+        if (e) {
+            console.error(e);
+            return;
+        }
+
+        console.log(util.inspect(data, false, null));
+    });
 }
