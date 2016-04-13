@@ -19,8 +19,10 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
           listThreads(auth, process.argv[3]);
       } else if (process.argv[2] === 'list-labels') {
           listLabels(auth, process.argv[3]);
+      } else if (process.argv[2] === 'message-full') {
+          getMessage(auth, 'full', process.argv[3]);
       } else if (process.argv[2] === 'message') {
-          getMessage(auth, process.argv[3]);
+          getMessage(auth, 'minimal', process.argv[3]);
       } else {
           console.error('invalid command');
       }
@@ -122,11 +124,12 @@ function listThreads(auth, labelId) {
   });
 }
 
-function getMessage(auth, messageId) {
+function getMessage(auth, format, messageId) {
     var gmail = google.gmail('v1');
     gmail.users.messages.get({
         auth: auth,
         'userId': 'me',
+        'format': format,
         'id': messageId
     }, function(e, data) {
         if (e) {
