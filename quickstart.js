@@ -14,7 +14,13 @@ fs.readFile('client_secret.json', function processClientSecrets(err, content) {
   }
 
   authorize(JSON.parse(content), function(auth) {
-      listThreads(auth, process.argv[2]);
+      if (process.argv[2] === 'threads') {
+          listThreads(auth, process.argv[3]);
+      } else if (process.argv[2] === 'list-labels') {
+          listLabels(auth, process.argv[3]);
+      } else {
+          console.error('invalid command');
+      }
   });
 });
 
@@ -70,6 +76,31 @@ function storeToken(token) {
   }
   fs.writeFile(TOKEN_PATH, JSON.stringify(token));
   console.log('Token stored to ' + TOKEN_PATH);
+}
+
+function listLabels(auth, match) {
+  var gmail = google.gmail('v1');
+  gmail.users.labels.list({
+    auth: auth,
+    userId: 'me',
+  }, function(err, response) {
+    if (err) {
+      console.log('The API returned an error: ' + err);
+      return;
+    }
+    var labels = response.labels;
+    if (labels.length == 0) {
+      console.log('No labels found.');
+    } else {
+      console.log('Labels:');
+      for (var i = 0; i < labels.length; i++) {
+        var label = labels[i];
+        if (label.name.match(match)) {
+            console.log(label);
+        }
+      }
+    }
+  });
 }
 
 function listThreads(auth, labelId) {
